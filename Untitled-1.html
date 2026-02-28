@@ -413,7 +413,14 @@
  *  Colinas Bank (single-file)
  *  Dados: localStorage
  *  ========================= */
-
+echo "# colinas" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/PFELTRIM/colinas.git
+git push -u origin main
+  
 const LS_KEY = "colinasbank:data:v1";
 const LS_PASS = "colinasbank:pass:v1";
 
@@ -758,3 +765,4 @@ setUnlocked(false);
 </script>
 </body>
 </html>
+
