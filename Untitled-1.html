@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Colinas Bank</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1a2f;
+      --panel2:#0c172b;
+      --text:#e7eefc;
+      --muted:#9bb0d6;
+      --brand:#69f0ae;
+      --brand2:#4dd0e1;
+      --danger:#ff6b6b;
+      --warn:#ffd166;
+      --ok:#69f0ae;
+      --stroke:rgba(255,255,255,.10);
+      --shadow:0 18px 60px rgba(0,0,0,.45);
+      --radius:18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 15% -10%, rgba(105,240,174,.18), transparent 60%),
+        radial-gradient(900px 500px at 85% 10%, rgba(77,208,225,.16), transparent 55%),
+        radial-gradient(900px 500px at 45% 110%, rgba(255,209,102,.10), transparent 60%),
+        linear-gradient(180deg, #070c16, var(--bg));
+      min-height:100vh;
+    }
+    header{
+      position:sticky; top:0;
+      backdrop-filter: blur(10px);
+      background: rgba(7,12,22,.55);
+      border-bottom:1px solid var(--stroke);
+      z-index:10;
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding:18px 18px;}
+    .top{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+    }
+    .logo{
+      width:44px; height:44px;
+      border-radius:14px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(105,240,174,.95), rgba(105,240,174,.25) 60%, transparent 61%),
+        radial-gradient(circle at 70% 70%, rgba(77,208,225,.95), rgba(77,208,225,.20) 60%, transparent 61%),
+        linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+    }
+    h1{font-size:18px; margin:0; letter-spacing:.2px}
+    .sub{font-size:12px; color:var(--muted); margin-top:2px}
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .tab{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:13px;
+      transition:.15s ease;
+    }
+    .tab.active{
+      background: linear-gradient(135deg, rgba(105,240,174,.20), rgba(77,208,225,.18));
+      border-color: rgba(105,240,174,.35);
+    }
+    main .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:16px;
+      margin-top:16px;
+    }
+    @media (max-width: 920px){
+      main .grid{grid-template-columns:1fr}
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding:16px 16px 10px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent);
+    }
+    .card .hd h2{margin:0; font-size:15px}
+    .card .hd p{margin:6px 0 0; color:var(--muted); font-size:12px; line-height:1.35}
+    .card .bd{padding:16px}
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    .row > *{flex: 1 1 180px}
+    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px}
+    input, select, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(8,14,26,.55);
+      color: var(--text);
+      outline:none;
+    }
+    input:focus, select:focus, textarea:focus{
+      border-color: rgba(105,240,174,.45);
+      box-shadow: 0 0 0 4px rgba(105,240,174,.10);
+    }
+    .btn{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      padding:12px 14px;
+      border-radius: 14px;
+      font-weight:700;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border:1px solid rgba(255,255,255,.12);
+      transition:.15s ease;
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(105,240,174,.26), rgba(77,208,225,.20));
+      border-color: rgba(105,240,174,.35);
+    }
+    .btn.danger{
+      background: rgba(255,107,107,.12);
+      border-color: rgba(255,107,107,.25);
+    }
+    .btn.warn{
+      background: rgba(255,209,102,.12);
+      border-color: rgba(255,209,102,.25);
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size:12px;
+    }
+    .balance{
+      font-family: var(--mono);
+      font-size: 30px;
+      letter-spacing: .2px;
+      margin: 10px 0 4px;
+      color: var(--text);
+    }
+    .gold{
+      color: var(--brand);
+      font-weight:800;
+    }
+    .small{font-size:12px; color:var(--muted); line-height:1.4}
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+      margin-top:10px;
+      max-height: 410px;
+      overflow:auto;
+      padding-right: 4px;
+    }
+    .item{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(12,18,34,.35);
+      border-radius: 14px;
+      padding:12px;
+    }
+    .item .name{font-weight:800}
+    .item .meta{font-size:12px; color:var(--muted); margin-top:4px}
+    .item .right{display:flex; align-items:center; gap:10px}
+    .tag{
+      font-family: var(--mono);
+      font-size:12px;
+      padding:8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(105,240,174,.25);
+      background: rgba(105,240,174,.08);
+      color: var(--text);
+      white-space:nowrap;
+    }
+    .hidden{display:none !important}
+    .notice{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+    .footer{
+      margin: 18px 0 30px;
+      color: rgba(255,255,255,.35);
+      font-size: 11px;
+      text-align:center;
+    }
+    .mono{font-family:var(--mono)}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Colinas Bank</h1>
+          <div class="sub">Painel de contas • moeda fictícia: <span class="gold">ColinasGold</span></div>
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" id="tabAluno">Área do Aluno</button>
+        <button class="tab" id="tabProf">Painel do Professor</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- ÁREA DO ALUNO -->
+  <section id="viewAluno">
+    <div class="grid">
+      <div class="card">
+        <div class="hd">
+          <div>
+            <h2>Saldo da conta</h2>
+            <p>O aluno pode consultar o saldo acumulado em <span class="gold">ColinasGold</span>.</p>
+          </div>
+          <div class="pill">💳 Conta • <span class="mono" id="alunoIdPill">—</span></div>
+        </div>
+        <div class="bd">
+          <div class="row">
+            <div>
+              <label for="alunoSelect">Selecione sua conta</label>
+              <select id="alunoSelect"></select>
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button class="btn primary" id="btnGerarLink">Gerar link de consulta</button>
+            </div>
+          </div>
+
+          <div style="margin-top:14px">
+            <div class="small">Titular</div>
+            <div style="font-size:18px; font-weight:900" id="alunoNome">—</div>
+            <div class="balance"><span class="gold" id="alunoSaldo">0</span> <span style="font-size:14px; color:var(--muted)">CG</span></div>
+            <div class="small">CG = ColinasGold (pontos). O saldo nunca fica negativo.</div>
+          </div>
+
+          <div class="notice" id="linkBox" style="display:none">
+            <div style="font-weight:800; color:var(--text); margin-bottom:6px">Link de consulta</div>
+            <div class="mono" id="linkTxt" style="word-break:break-all"></div>
+            <div class="small" style="margin-top:8px">Dica: esse link abre direto na conta do aluno (apenas consulta).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd">
+          <div>
+            <h2>Como ganhar ColinasGold</h2>
+            <p>Regras rápidas (você pode ajustar na sua prática).</p>
+          </div>
+        </div>
+        <div class="bd">
+          <ul class="small" style="margin:0; padding-left:18px; line-height:1.6">
+            <li>Entrega de atividades, participação, correção na lousa.</li>
+            <li>Participação/premiação em olimpíadas.</li>
+            <li>Perde CG se atrapalha ou dorme (mas sem negativar).</li>
+            <li>Uso no leilão do final do bimestre.</li>
+          </ul>
+          <div class="notice">
+            <b style="color:var(--text)">Privacidade:</b> este site salva os dados no <b>navegador</b> de quem edita (localStorage).  
+            Se quiser acesso em qualquer computador, use o modo “Exportar/Importar” no Painel do Professor.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">Colinas Bank • protótipo educacional (sem dados reais)</div>
+  </section>
+
+  <!-- PAINEL DO PROFESSOR -->
+  <section id="viewProf" class="hidden">
+    <div class="grid">
+      <div class="card">
+        <div class="hd">
+          <div>
+            <h2>Gerenciar contas</h2>
+            <p>Crie contas, renomeie alunos e ajuste saldo (com trava para não negativar).</p>
+          </div>
+          <div class="pill">🔐 Acesso • <span id="lockState">bloqueado</span></div>
+        </div>
+        <div class="bd">
+          <div class="row">
+            <div>
+              <label for="profSenha">Senha do professor</label>
+              <input id="profSenha" type="password" placeholder="defina/insira uma senha (ex: colinas2026)" />
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button class="btn primary" id="btnEntrar">Entrar / Definir senha</button>
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button class="btn" id="btnSair">Sair</button>
+            </div>
+          </div>
+
+          <hr style="border:0;border-top:1px solid rgba(255,255,255,.08); margin:16px 0">
+
+          <div id="profArea" class="hidden">
+            <div class="row">
+              <div>
+                <label for="novoNome">Criar nova conta (nome do aluno)</label>
+                <input id="novoNome" placeholder="Ex: Ana Silva (1A)" />
+              </div>
+              <div>
+                <label>&nbsp;</label>
+                <button class="btn primary" id="btnCriar">Criar conta</button>
+              </div>
+            </div>
+
+            <div style="margin-top:14px" class="row">
+              <div>
+                <label for="editSelect">Selecionar conta</label>
+                <select id="editSelect"></select>
+              </div>
+              <div>
+                <label for="editNome">Editar nome do aluno</label>
+                <input id="editNome" placeholder="Novo nome..." />
+              </div>
+              <div>
+                <label>&nbsp;</label>
+                <button class="btn" id="btnRenomear">Salvar nome</button>
+              </div>
+            </div>
+
+            <div style="margin-top:14px" class="row">
+              <div>
+                <label for="ajusteValor">Ajuste de saldo (CG)</label>
+                <input id="ajusteValor" type="number" step="1" min="0" placeholder="Ex: 10" />
+              </div>
+              <div>
+                <label for="ajusteMotivo">Motivo (opcional)</label>
+                <input id="ajusteMotivo" placeholder="Ex: participação / atividade / atrapalhou..." />
+              </div>
+              <div>
+                <label>&nbsp;</label>
+                <div class="row" style="gap:8px">
+                  <button class="btn primary" id="btnAdicionar">+ Adicionar</button>
+                  <button class="btn warn" id="btnRemover">− Remover</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="notice" id="profResumo"></div>
+
+            <div class="row" style="margin-top:14px">
+              <div>
+                <label>Exportar dados (backup)</label>
+                <button class="btn" id="btnExportar">Exportar JSON</button>
+              </div>
+              <div>
+                <label>Importar dados (colar JSON)</label>
+                <button class="btn" id="btnImportar">Importar JSON</button>
+              </div>
+              <div>
+                <label>Reset (cuidado)</label>
+                <button class="btn danger" id="btnReset">Apagar tudo</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd">
+          <div>
+            <h2>Contas e saldos</h2>
+            <p>Visão rápida do total de alunos e saldos atuais.</p>
+          </div>
+        </div>
+        <div class="bd">
+          <div class="pill">👥 Total: <span class="mono" id="totalContas">0</span></div>
+          <div class="list" id="listaContas"></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">Colinas Bank • Painel do Professor (local)</div>
+  </section>
+</main>
+
+<script>
+/** =========================
+ *  Colinas Bank (single-file)
+ *  Dados: localStorage
+ *  ========================= */
+
+const LS_KEY = "colinasbank:data:v1";
+const LS_PASS = "colinasbank:pass:v1";
+
+function uid(){
+  return "CB-" + Math.random().toString(16).slice(2,10).toUpperCase();
+}
+
+function loadData(){
+  const raw = localStorage.getItem(LS_KEY);
+  if(raw){
+    try{ return JSON.parse(raw); } catch(e){}
+  }
+  // dados iniciais (exemplo)
+  return {
+    accounts: [
+      { id: uid(), name: "Conta Exemplo (você pode renomear)", balance: 50, history: [] }
+    ],
+    updatedAt: new Date().toISOString()
+  };
+}
+
+function saveData(data){
+  data.updatedAt = new Date().toISOString();
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+}
+
+let DB = loadData();
+saveData(DB);
+
+// ---------- UI helpers ----------
+const $ = (id)=>document.getElementById(id);
+function fmt(n){ return (Number(n)||0).toLocaleString("pt-BR"); }
+function clampNonNegative(n){ return Math.max(0, Math.floor(Number(n)||0)); }
+
+function getQueryParam(name){
+  const p = new URLSearchParams(location.search);
+  return p.get(name);
+}
+
+// ---------- Tabs ----------
+const tabAluno = $("tabAluno");
+const tabProf = $("tabProf");
+const viewAluno = $("viewAluno");
+const viewProf = $("viewProf");
+
+tabAluno.onclick = ()=>{
+  tabAluno.classList.add("active");
+  tabProf.classList.remove("active");
+  viewAluno.classList.remove("hidden");
+  viewProf.classList.add("hidden");
+};
+tabProf.onclick = ()=>{
+  tabProf.classList.add("active");
+  tabAluno.classList.remove("active");
+  viewProf.classList.remove("hidden");
+  viewAluno.classList.add("hidden");
+};
+
+// ---------- Área do Aluno ----------
+const alunoSelect = $("alunoSelect");
+const alunoNome = $("alunoNome");
+const alunoSaldo = $("alunoSaldo");
+const alunoIdPill = $("alunoIdPill");
+const btnGerarLink = $("btnGerarLink");
+const linkBox = $("linkBox");
+const linkTxt = $("linkTxt");
+
+function populateAlunoSelect(){
+  alunoSelect.innerHTML = "";
+  DB.accounts.forEach(a=>{
+    const opt = document.createElement("option");
+    opt.value = a.id;
+    opt.textContent = a.name;
+    alunoSelect.appendChild(opt);
+  });
+}
+
+function renderAluno(id){
+  const acc = DB.accounts.find(a=>a.id===id) || DB.accounts[0];
+  if(!acc) return;
+  alunoSelect.value = acc.id;
+  alunoNome.textContent = acc.name;
+  alunoSaldo.textContent = fmt(acc.balance);
+  alunoIdPill.textContent = acc.id;
+}
+
+btnGerarLink.onclick = ()=>{
+  const id = alunoSelect.value;
+  const url = new URL(location.href);
+  url.searchParams.set("aluno", id);
+  linkBox.style.display = "block";
+  linkTxt.textContent = url.toString();
+};
+
+alunoSelect.onchange = ()=>{ linkBox.style.display="none"; renderAluno(alunoSelect.value); };
+
+// Se abrir com ?aluno=ID, já seleciona
+function initAlunoFromQuery(){
+  const id = getQueryParam("aluno");
+  populateAlunoSelect();
+  if(id && DB.accounts.some(a=>a.id===id)){
+    renderAluno(id);
+  }else{
+    renderAluno(DB.accounts[0]?.id);
+  }
+}
+initAlunoFromQuery();
+
+// ---------- Painel do Professor ----------
+const profSenha = $("profSenha");
+const btnEntrar = $("btnEntrar");
+const btnSair = $("btnSair");
+const profArea = $("profArea");
+const lockState = $("lockState");
+
+const novoNome = $("novoNome");
+const btnCriar = $("btnCriar");
+
+const editSelect = $("editSelect");
+const editNome = $("editNome");
+const btnRenomear = $("btnRenomear");
+
+const ajusteValor = $("ajusteValor");
+const ajusteMotivo = $("ajusteMotivo");
+const btnAdicionar = $("btnAdicionar");
+const btnRemover = $("btnRemover");
+
+const profResumo = $("profResumo");
+const totalContas = $("totalContas");
+const listaContas = $("listaContas");
+
+const btnExportar = $("btnExportar");
+const btnImportar = $("btnImportar");
+const btnReset = $("btnReset");
+
+let PROF_UNLOCKED = false;
+
+function hasPassword(){
+  return !!localStorage.getItem(LS_PASS);
+}
+
+function setUnlocked(state){
+  PROF_UNLOCKED = state;
+  profArea.classList.toggle("hidden", !state);
+  lockState.textContent = state ? "desbloqueado" : "bloqueado";
+  lockState.style.color = state ? "var(--ok)" : "var(--muted)";
+}
+
+function checkPassword(pw){
+  const saved = localStorage.getItem(LS_PASS);
+  if(!saved) return false;
+  // comparação simples (para uso educacional)
+  return saved === pw;
+}
+
+btnEntrar.onclick = ()=>{
+  const pw = (profSenha.value || "").trim();
+  if(!pw){
+    alert("Digite uma senha.");
+    return;
+  }
+  if(!hasPassword()){
+    // define a senha
+    localStorage.setItem(LS_PASS, pw);
+    setUnlocked(true);
+    profSenha.value = "";
+    alert("Senha definida! Guarde essa senha.");
+    renderAll();
+    return;
+  }
+  if(checkPassword(pw)){
+    setUnlocked(true);
+    profSenha.value = "";
+    renderAll();
+  }else{
+    alert("Senha incorreta.");
+  }
+};
+
+btnSair.onclick = ()=>{
+  setUnlocked(false);
+  profSenha.value = "";
+};
+
+function populateEditSelect(){
+  editSelect.innerHTML = "";
+  DB.accounts.forEach(a=>{
+    const opt = document.createElement("option");
+    opt.value = a.id;
+    opt.textContent = a.name;
+    editSelect.appendChild(opt);
+  });
+  if(DB.accounts[0]) editSelect.value = DB.accounts[0].id;
+  syncEditFields();
+}
+
+function syncEditFields(){
+  const id = editSelect.value;
+  const acc = DB.accounts.find(a=>a.id===id);
+  if(!acc) return;
+  editNome.value = acc.name;
+  profResumo.innerHTML =
+    `<b style="color:var(--text)">Selecionado:</b> <span class="mono">${acc.id}</span><br>
+     <b style="color:var(--text)">Saldo:</b> <span class="gold">${fmt(acc.balance)} CG</span><br>
+     <span class="small">Última atualização: ${new Date(DB.updatedAt).toLocaleString("pt-BR")}</span>`;
+}
+
+editSelect.onchange = syncEditFields;
+
+btnCriar.onclick = ()=>{
+  if(!PROF_UNLOCKED) return alert("Desbloqueie o painel com a senha.");
+  const name = (novoNome.value || "").trim();
+  if(!name) return alert("Digite o nome do aluno.");
+  DB.accounts.unshift({ id: uid(), name, balance: 0, history: [] });
+  saveData(DB);
+  novoNome.value = "";
+  renderAll();
+};
+
+btnRenomear.onclick = ()=>{
+  if(!PROF_UNLOCKED) return alert("Desbloqueie o painel com a senha.");
+  const id = editSelect.value;
+  const acc = DB.accounts.find(a=>a.id===id);
+  if(!acc) return;
+  const nn = (editNome.value||"").trim();
+  if(!nn) return alert("Nome não pode ficar vazio.");
+  acc.name = nn;
+  saveData(DB);
+  renderAll();
+};
+
+function applyDelta(delta){
+  if(!PROF_UNLOCKED) return alert("Desbloqueie o painel com a senha.");
+  const id = editSelect.value;
+  const acc = DB.accounts.find(a=>a.id===id);
+  if(!acc) return;
+
+  const v = clampNonNegative(ajusteValor.value);
+  if(!v) return alert("Informe um valor maior que 0.");
+  const reason = (ajusteMotivo.value||"").trim();
+
+  const before = acc.balance;
+  const after = Math.max(0, before + delta * v); // trava para não negativar
+
+  const entry = {
+    at: new Date().toISOString(),
+    delta: (after - before),
+    reason: reason || (delta>0 ? "crédito" : "débito"),
+    by: "professor"
+  };
+  acc.balance = after;
+  acc.history.unshift(entry);
+
+  saveData(DB);
+  ajusteValor.value = "";
+  ajusteMotivo.value = "";
+  renderAll();
+}
+
+btnAdicionar.onclick = ()=>applyDelta(+1);
+btnRemover.onclick = ()=>applyDelta(-1);
+
+btnExportar.onclick = ()=>{
+  if(!PROF_UNLOCKED) return alert("Desbloqueie o painel com a senha.");
+  const payload = JSON.stringify(DB, null, 2);
+  // Copia para a área de transferência se possível
+  navigator.clipboard?.writeText(payload).catch(()=>{});
+  prompt("Copie o JSON abaixo (já tentei copiar automaticamente):", payload);
+};
+
+btnImportar.onclick = ()=>{
+  if(!PROF_UNLOCKED) return alert("Desbloqueie o painel com a senha.");
+  const txt = prompt("Cole aqui o JSON exportado:");
+  if(!txt) return;
+  try{
+    const obj = JSON.parse(txt);
+    if(!obj || !Array.isArray(obj.accounts)) throw new Error("Formato inválido.");
+    DB = obj;
+    saveData(DB);
+    renderAll();
+    alert("Importado com sucesso!");
+  }catch(e){
+    alert("Não consegui importar. Verifique se você colou o JSON completo.");
+  }
+};
+
+btnReset.onclick = ()=>{
+  if(!PROF_UNLOCKED) return alert("Desbloqueie o painel com a senha.");
+  const ok = confirm("Tem certeza? Isso apaga todas as contas e saldos deste navegador.");
+  if(!ok) return;
+  localStorage.removeItem(LS_KEY);
+  DB = loadData();
+  saveData(DB);
+  renderAll();
+};
+
+// Lista de contas (painel)
+function renderList(){
+  totalContas.textContent = DB.accounts.length;
+  listaContas.innerHTML = "";
+
+  DB.accounts
+    .slice()
+    .sort((a,b)=> (b.balance||0) - (a.balance||0))
+    .forEach(acc=>{
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `
+        <div>
+          <div class="name">${acc.name}</div>
+          <div class="meta">ID: <span class="mono">${acc.id}</span></div>
+        </div>
+        <div class="right">
+          <div class="tag"><span class="gold">${fmt(acc.balance)}</span> CG</div>
+        </div>
+      `;
+      listaContas.appendChild(div);
+    });
+}
+
+function renderAll(){
+  // aluno
+  populateAlunoSelect();
+  // mantém seleção atual do aluno, se existir
+  const currentAluno = alunoSelect.value;
+  if(currentAluno && DB.accounts.some(a=>a.id===currentAluno)){
+    renderAluno(currentAluno);
+  }else{
+    renderAluno(DB.accounts[0]?.id);
+  }
+
+  // professor
+  populateEditSelect();
+  renderList();
+  syncEditFields();
+}
+
+renderAll();
+
+// Ao abrir o Painel do Professor, não desbloqueia automaticamente
+setUnlocked(false);
+</script>
+</body>
+</html>
